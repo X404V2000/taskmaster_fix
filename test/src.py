@@ -1,5 +1,6 @@
 import json
 import os
+import foo
 
 # File to store tasks
 TASKS_FILE = "tasks.json"
@@ -32,7 +33,7 @@ def list_tasks():
         print("No tasks found.")
         return
     for task in tasks:
-        status = "✓" if task.completed else "✗"
+        status = "✓" if tasks else "✗"
         print(f"[{status}] {task['id']}: {task['description']}")
 
 def complete_task(task_id):
@@ -68,7 +69,7 @@ def main():
         choice = input("Choose an option (1-5): ")
 
         if choice == "1":
-            desc = input("Enter task description: ")
+            desc = input("Enter task description: ").join(foo.split()).strip().title()    #fixed input validation
             add_task(desc)
         elif choice == "2":
             list_tasks()

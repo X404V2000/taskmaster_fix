@@ -1,6 +1,5 @@
 import json
 import os
-import foo
 
 # File to store tasks
 TASKS_FILE = "tasks.json"
@@ -33,7 +32,7 @@ def list_tasks():
         print("No tasks found.")
         return
     for task in tasks:
-        status = "✓" if tasks else "✗"
+        status = "✓" if task["completed"] else "✗"
         print(f"[{status}] {task['id']}: {task['description']}")
 
 def complete_task(task_id):
@@ -41,7 +40,7 @@ def complete_task(task_id):
     tasks = load_tasks()
     for task in tasks:
         if task['id'] == task_id:
-            task.completed = True
+            task["completed"] = True
             save_tasks(tasks)
             print(f"Task {task_id} marked as completed.")
             return
@@ -50,11 +49,13 @@ def complete_task(task_id):
 def delete_task(task_id):
     """Delete a task."""
     tasks = load_tasks()
-    for task in tasks:
+    for task in tasks:  
         if task['id'] == task_id:
+            new_id = len(tasks) - 1
             tasks.remove(task)
             save_tasks(tasks)
             print(f"Task {task_id} deleted.")
+
             return
     print(f"Task {task_id} not found.")
 
@@ -69,18 +70,29 @@ def main():
         choice = input("Choose an option (1-5): ")
 
         if choice == "1":
-            desc = input("Enter task description: ").join(foo.split()).strip().title()    #fixed input validation
+            desc = input("Enter task description: ").strip().title()
             add_task(desc)
         elif choice == "2":
             list_tasks()
         elif choice == "3":
-            try:
-                task_id = int(input("Enter task ID to complete: "))
-            except ValueError:
-                print("Invalid ID. Please enter a number.")
+            while True:
+                try:
+                    task_id = int(input("Enter task ID to complete: "))
+                except ValueError:
+                    print("Invalid ID. Please enter a number.")
+                    continue
+                if task_id:
+                    break
             complete_task(task_id)
         elif choice == "4":
-            task_id = int(input("Enter task ID to delete: "))
+            while True:
+                try:
+                    task_id = int(input("Enter task ID to delete: "))
+                except ValueError:
+                    print("You've entered an invalid input")
+                    continue
+                if task_id:
+                    break
             delete_task(task_id)
         elif choice == "5":
             print("Goodbye!")
@@ -90,3 +102,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
